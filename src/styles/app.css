@@ -9,3 +9,15 @@
     justify-content: space-between;
     align-items: center;
 }
+.page-wrapper {
+    display: flex;
+}
+.page {
+    margin-right: 10px;
+    padding: 10px;
+    border: 2px solid cornflowerblue;
+    cursor: pointer;
+}
+.page.active{
+    border: 3px solid red;
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import PostServices from "./API/PostServices";
+import { Pagination } from "./components/Pagination";
 import { PostFilter } from "./components/PostFilter";
 import { PostForm } from "./components/PostForm";
 import { PostList } from "./components/PostList";
@@ -10,18 +11,23 @@ import { useFetching } from "./hooks/useFetching";
 import { usePosts } from "./hooks/usePosts";
 
 import './styles/app.css'
+import { pagesCount } from "./utils/pagination";
 
 
 function App() {
   const [posts, setPosts] = useState([])
-  const [filter, setFilter] = useState({sort:'', query:''})
+  const [filter, setFilter] = useState({ sort: '', query: '' })
   const [modal, setModal] = useState(false)
-  const [fetchPosts, loading, error] = useFetching(async ()=> {
-    const posts = await PostServices.getAll()
-    setPosts(posts)
+  const [totalPages, setTotalPages] = useState(0)
+  const [limit, setLimit] = useState(10)
+  const [page, setPage] = useState(1)
+  const [fetchPosts, loading, error] = useFetching(async () => {
+    const response = await PostServices.getAll(limit, page)
+    const totalCount = response.headers['x-total-count']
+    setTotalPages(pagesCount(totalCount, limit))
+    setPosts(response.data)
   })
-  
-  
+
   const searchAndSortedPosts = usePosts(posts, filter.sort, filter.query)
 
   const createPost = (newPost) => {
@@ -29,31 +35,34 @@ function App() {
     setModal(false)
   }
   const removePost = (id) => {
-    setPosts(posts.filter(post=>post.id !== id))
+    setPosts(posts.filter(post => post.id !== id))
   }
 
   useEffect(() => {
     fetchPosts()
-  }, [])
-  
+  }, [page])
+
 
   return (
     <div className="app">
-      <MyButton style={{margin:10}} onClick={()=>setModal(true)}>Добавить пост</MyButton>
+      <MyButton style={{ margin: 10 }} onClick={() => setModal(true)}>Добавить пост</MyButton>
       <MyModal setValue={setModal}
-      value={modal}>
+        value={modal}>
         <PostForm create={createPost} />
       </MyModal>
       <PostFilter setFilter={setFilter}
-      filter={filter} />
-      {error&&<h1>Произошла ошибка {error}</h1>}
+        filter={filter} />
+      {error && <h1>Произошла ошибка {error}</h1>}
       {loading
-      ?<Loader />
-      :<PostList removePost={removePost}
-      posts={searchAndSortedPosts} 
-      title='Посты про React' />
+        ? <Loader />
+        : <PostList removePost={removePost}
+          posts={searchAndSortedPosts}
+          title='Посты про React' />
       }
-    </div>
+      <Pagination setPage={setPage}
+      totalPages={totalPages}
+      page={page}/>
+    </div >
   );
 }
 
