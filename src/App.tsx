@@ -1,24 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FC, useState } from "react";
 
-function App() {
+import './styles/app.css';
+
+import PostList from "./components/PostList";
+import PostForm from "./components/PostForm";
+
+const App:FC =() => {
+  const [posts, setPosts] = useState([
+    {id:1, title:'Всем привет',body:'Это мой первый пост'},
+    {id:2, title:'React',body:'Нужно выучить React'},
+    {id:3, title:'Node',body:'Нужно изучить backend'},
+  ])
+ 
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <PostForm posts={posts} setPosts={setPosts} />
+      <PostList posts={posts} />
     </div>
   );
 }

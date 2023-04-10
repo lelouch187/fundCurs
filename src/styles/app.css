@@ -1,0 +1,26 @@
+*{
+   margin: 0;
+   padding: 0;
+}
+.App{
+   max-width: 800px;
+   margin: 0 auto;
+   font-size: 18px;
+}
+.PostList{
+   display: flex;
+   flex-direction: column;
+}
+.post_item {
+   border:2px solid green;
+   padding: 10px;
+   margin-top: 15px;
+}
+.text {
+   display: block;
+   margin-top: 10px;
+}
+.post_body{
+   display: flex;
+   justify-content: space-between;
+}
