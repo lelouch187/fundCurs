@@ -5,9 +5,10 @@ import MyButton from './UI/MyButton/MyButton';
 interface PostItemProps {
   post: Post;
   index: number;
+  deletePost: (id: number) => void;
 }
 
-const PostItem: FC<PostItemProps> = ({ post, index }) => {
+const PostItem: FC<PostItemProps> = ({ post, index, deletePost }) => {
   return (
     <div className="post_item">
       <div>
@@ -17,7 +18,7 @@ const PostItem: FC<PostItemProps> = ({ post, index }) => {
       </div>
       <div className="post_body">
         <p className="text">{post.body}</p>
-        <MyButton>Удалить</MyButton>
+        <MyButton onClick={()=>deletePost(post.id)}>Удалить</MyButton>
       </div>
     </div>
   );
